@@ -5,7 +5,6 @@ import model.TaskStatus;
 import service.TaskManager;
 
 public class Main {
-
     public static void main(String[] args) {
 
         TaskManager taskManager = new TaskManager();

@@ -13,7 +13,7 @@ public class TaskManager {
     private final HashMap<Integer, Task> tasks = new HashMap<>();
     private final HashMap<Integer, Epic> epics = new HashMap<>();
     private final HashMap<Integer, Subtask> subtasks = new HashMap<>();
-    int idCounter;
+    private int idCounter;
 
     private int generateId() {
         return ++idCounter;
@@ -82,9 +82,10 @@ public class TaskManager {
         }
     }
 
+
     private void updateEpicStatus(Epic epic) {
-        boolean isAllNew = true;
-        boolean isAllDone = true;
+        boolean hasDifferentStatuses = false;
+        TaskStatus commonStatus = null;
 
         List<Subtask> listOfEpicSubtasks = epic.getSubtasks();
         if (listOfEpicSubtasks.isEmpty()) {
@@ -93,14 +94,19 @@ public class TaskManager {
         }
 
         for (Subtask subtask : listOfEpicSubtasks) {
-            if (!subtask.getStatus().equals(TaskStatus.NEW)) isAllNew = false;
-
-            if (!subtask.getStatus().equals(TaskStatus.DONE)) isAllDone = false;
+            if (commonStatus == null) {
+                commonStatus = subtask.getStatus();
+            } else if (!subtask.getStatus().equals(commonStatus)) {
+                hasDifferentStatuses = true;
+                break;
+            }
         }
 
-        if (isAllNew) epic.setStatus(TaskStatus.NEW);
-        else if (isAllDone) epic.setStatus(TaskStatus.DONE);
-        else epic.setStatus(TaskStatus.IN_PROGRESS);
+        if (hasDifferentStatuses) {
+            epic.setStatus(TaskStatus.IN_PROGRESS);
+        } else {
+            epic.setStatus(commonStatus);
+        }
     }
 
     public ArrayList<Subtask> getAllSubtasks() {
