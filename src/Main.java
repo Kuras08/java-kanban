@@ -45,29 +45,31 @@ public class Main {
         manager.updateEpic(new Epic("newEpic1", "newDescription", idEpic1));
 
         manager.updateSubtask(new Subtask("newSubtask1ForEpic1", "newDescription",
-                DONE, idSubtask1ForEpic1, idEpic1));
+                DONE, idSubtask1ForEpic1, idEpic1));*/
 
-        manager.deleteTaskById(task2.getId());
-        manager.deleteEpicById(epic2.getId());
-        manager.deleteSubtaskById(idSubtask2ForEpic1);
+        manager.getTaskById(idTask1);
+        manager.getTaskById(idTask2);
+        manager.getEpicById(idEpic1);
+        manager.getSubtaskById(idSubtask1ForEpic1);
+        manager.getTaskById(idTask2);
+        manager.getSubtaskById(idSubtask1ForEpic1);
+        manager.getTaskById(idTask1);
+        manager.getEpicById(idEpic1);
 
-        System.out.println("Tasks (updating and deletion):\n" + manager.getAllTasks() + "\n");
+        /*System.out.println("Tasks (updating and deletion):\n" + manager.getAllTasks() + "\n");
         System.out.println("Epics (updating and deletion):\n" + manager.getAllEpics() + "\n");
         System.out.println("Subtasks (updating and deletion):\n" + manager.getAllSubtasks() + "\n");*/
 
-        manager.getTaskById(idTask1);
-        manager.getTaskById(idTask2);
-        manager.getEpicById(idEpic1);
-        manager.getSubtaskById(idSubtask1ForEpic1);
-        manager.getSubtaskById(idSubtask2ForEpic1);
-        manager.getEpicById(idEpic1);
-        manager.getSubtaskById(idSubtask1ForEpic1);
-        manager.getSubtaskById(idSubtask2ForEpic1);
-        manager.getTaskById(idTask1);
-        manager.getTaskById(idTask2);
-        manager.getEpicById(idEpic2);
-
         System.out.println("History:");
+        for (Task task : manager.getHistory()) {
+            System.out.println(task);
+        }
+
+        manager.deleteTaskById(idTask2);
+        manager.deleteEpicById(idEpic1);
+        System.out.println();
+
+        System.out.println("History (deletion) :");
         for (Task task : manager.getHistory()) {
             System.out.println(task);
         }

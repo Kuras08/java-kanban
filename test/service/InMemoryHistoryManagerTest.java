@@ -1,68 +1,74 @@
 package service;
 
 import model.Epic;
+import model.Subtask;
 import model.Task;
 import model.TaskStatus;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import java.util.List;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @DisplayName("InMemoryHistoryManager")
 class InMemoryHistoryManagerTest {
+
     HistoryManager historyManager;
-    List<Task> history;
-    Task task1;
-    Task task2;
+    Task task;
+    Epic epic;
+    Subtask subtask;
+    Subtask subtask2;
 
     @BeforeEach
     public void beforeEach() {
         historyManager = new InMemoryHistoryManager();
-        history = historyManager.getHistory();
-        task1 = new Task("Task1", "description", TaskStatus.NEW);
-        task2 = new Task("Task2", "description", TaskStatus.NEW);
+
+        task = new Task("Task1", "description", TaskStatus.NEW, 1);
+        epic = new Epic("Epic1", "Description", 2);
+        subtask = new Subtask("Subtask1ForEpic1", "Description",
+                TaskStatus.NEW, 3, epic.getId());
+        subtask2 = new Subtask("Subtask2ForEpic1", "Description",
+                TaskStatus.IN_PROGRESS, 4, epic.getId());
     }
 
 
     @Test
-    @DisplayName("должен добавлять задачу и сохранять ее предыдущую версию")
-    void shouldAddTaskSavePreviousVersion() {
-        historyManager.add(task1);
-        historyManager.add(task2);
-        historyManager.add(task1);
+    @DisplayName("Должен проверять добавление задач, эпиков и подзадач в список истории")
+    void shouldCheckAdditionTasksEpicsAndSubtasksInListHistory() {
+        historyManager.add(task);
+        historyManager.add(epic);
+        historyManager.add(subtask);
+        historyManager.add(subtask2);
 
-        assertEquals(3, history.size());
-        assertEqualsTask(history.get(0), history.get(2));
+        assertEquals(4, historyManager.getHistory().size());
     }
 
     @Test
-    @DisplayName("должен удалить самую первую задачу и добавить новую, если размер списка равен 10")
-    void shouldRemoveOldestTaskAndAddNewIfListSize10() {
-        for (int i = 1; i <= 10; i++) {
-            historyManager.add(task1);
-            assertEquals(i, history.size());
-        }
+    @DisplayName("Должен проверять, что список хранит только уникальные элементы")
+    void shouldCheckStoresOnlyUniqueElements() {
+        historyManager.add(task);
+        historyManager.add(task);
+        historyManager.add(epic);
+        historyManager.add(epic);
+        historyManager.add(subtask);
+        historyManager.add(subtask);
+        historyManager.add(subtask2);
+        historyManager.add(subtask2);
 
-        Epic newEpic = new Epic("newTask", "description");
-        historyManager.add(newEpic);
-        assertEqualsTask(newEpic, history.get(9));
-        assertEquals(10, history.size());
+        assertEquals(4, historyManager.getHistory().size());
     }
 
     @Test
-    @DisplayName("список не должен быть null")
-    void shouldNotBeNull() {
-        assertNotNull(history);
-    }
+    @DisplayName("Должен проверять удаление по id задач, эпиков и подзадач из списка истории")
+    void shouldCheckRemoveTasksEpicsAndSubtasksFromListHistory() {
+        historyManager.add(task);
+        historyManager.add(epic);
+        historyManager.add(subtask);
 
-    private static void assertEqualsTask(Task expected, Task actual) {
-        assertEquals(expected.getTitle(), actual.getTitle());
-        assertEquals(expected.getDescription(), actual.getDescription());
-        assertEquals(expected.getStatus(), actual.getStatus());
-        assertEquals(expected.getId(), actual.getId());
+        historyManager.remove(1);
+        historyManager.remove(2);
+        historyManager.remove(3);
+
+        assertEquals(0, historyManager.getHistory().size());
     }
 }

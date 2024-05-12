@@ -6,11 +6,11 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 
-@DisplayName("Эпик")
+@DisplayName("Task")
 class TaskTest {
 
     @Test
-    @DisplayName("должен совпадать со своей копией")
+    @DisplayName("Должен проверять задачу со своей копией")
     void shouldEqualsWithCopy() {
         Task task = new Task("Task1", "Description", TaskStatus.NEW);
         Task taskExpected = new Task("Task1", "Description", TaskStatus.NEW);

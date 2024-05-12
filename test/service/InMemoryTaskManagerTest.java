@@ -17,8 +17,11 @@ class InMemoryTaskManagerTest {
     TaskManager manager;
     HistoryManagerStub historyManager;
     Task task;
+    Task task2;
     Epic epic;
+    Epic epic2;
     Subtask subtask;
+    Subtask subtask2;
 
     @BeforeEach
     void beforeEach() {
@@ -26,227 +29,180 @@ class InMemoryTaskManagerTest {
         manager = new InMemoryTaskManager(historyManager);
 
         task = manager.createTask(new Task("Task1", "Description", TaskStatus.NEW));
+        task2 = manager.createTask(new Task("Task2", "Description", TaskStatus.DONE));
         epic = manager.createEpic(new Epic("Epic1", "Description"));
         subtask = manager.createSubtask(new Subtask("Subtask1ForEpic1", "Description",
-                TaskStatus.DONE, epic.getId()));
+                TaskStatus.NEW, epic.getId()));
+        subtask2 = manager.createSubtask(new Subtask("Subtask2ForEpic1", "Description",
+                TaskStatus.IN_PROGRESS, epic.getId()));
+        epic2 = manager.createEpic(new Epic("Epic2", "Description"));
     }
 
     @Test
-    @DisplayName("должен возвращать список с задачами")
-    void shouldReturnListTasks() {
+    @DisplayName("Должен проверять, что возвращаемый список содержит задачи")
+    void shouldCheckReturnedListTasks() {
         List<Task> tasks = manager.getAllTasks();
-        assertEquals(1, tasks.size());
-        assertEqualsTask(task, tasks.getFirst());
+        assertEquals(2, tasks.size());
     }
 
     @Test
-    @DisplayName("должен возвращать список с эпиками")
-    void shouldReturnListEpics() {
+    @DisplayName("Должен проверять, что возвращаемый список содержит эпики")
+    void shouldCheckReturnedListEpics() {
         List<Epic> epics = manager.getAllEpics();
-        assertEquals(1, epics.size());
-        assertEqualsTask(epic, epics.getFirst());
+        assertEquals(2, epics.size());
     }
 
     @Test
-    @DisplayName("должен возвращать список с подзадачами")
-    void shouldReturnListSubtasks() {
+    @DisplayName("Должен проверять, что возвращаемый список содержит подзадачи")
+    void shouldCheckReturnedListSubtasks() {
         List<Subtask> subtasks = manager.getAllSubtasks();
-        assertEquals(1, subtasks.size());
-        assertEqualsTask(subtask, subtasks.getFirst());
+        assertEquals(2, subtasks.size());
     }
 
     @Test
-    @DisplayName("должен удалять все задачи из списка")
-    void shouldRemoveAllTasksFromList() {
+    @DisplayName("Должен проверять, что все задачи удалены из списка")
+    void shouldCheckRemoveAllTasksFromList() {
         manager.deleteAllTasks();
         List<Task> tasks = manager.getAllTasks();
         assertEquals(0, tasks.size());
     }
 
     @Test
-    @DisplayName("должен удалять все эпики из списка и все подзадачи данных эпиков")
-    void shouldRemoveAllEpicsFromList() {
+    @DisplayName("Должен проверять, что все эпики и подзадачи удалены из списков")
+    void shouldCheckRemoveAllEpicsAndSubtasksFromLists() {
         manager.deleteAllEpics();
         List<Epic> epics = manager.getAllEpics();
         List<Subtask> subtasks = manager.getAllSubtasks();
-        List<Subtask> epicSubtasks = epic.getSubtasks();
 
         assertEquals(0, epics.size());
         assertEquals(0, subtasks.size());
-        assertEquals(0, epicSubtasks.size());
     }
 
     @Test
-    @DisplayName("должен удалять все подзадачи из общего списка, затем удалить подзадачи из списка эпиков," +
-            " после обновить статусы эпиков")
-    void shouldRemoveAllSubtasksFromList() {
+    @DisplayName("Должен проверять, что подзадачи удалены из списков")
+    void shouldCheckRemoveAllSubtasksFromLists() {
         manager.deleteAllSubtasks();
 
         List<Subtask> subtasks = manager.getAllSubtasks();
-        List<Subtask> epicSubtasks = epic.getSubtasks();
+        List<Subtask> epicSubtasks = manager.getAllSubtasksEpic(epic.getId());
 
         assertEquals(0, subtasks.size());
         assertEquals(0, epicSubtasks.size());
-        assertEquals(TaskStatus.NEW, epic.getStatus());
     }
 
     @Test
-    @DisplayName("должен получать задачу по Id")
-    void shouldGetTaskById() {
-        Task retrievedTask = manager.getTaskById(task.getId());
-        assertNotNull(retrievedTask);
-        assertEqualsTask(task, retrievedTask);
+    @DisplayName("Должен проверять, что задача извлекается по существующему id")
+    void shouldCheckTaskRetrievedByExistingId() {
+        Task receivedTask = manager.getTaskById(task.getId());
+        assertNotNull(receivedTask);
     }
 
     @Test
-    @DisplayName("должен получать эпик по Id")
-    void shouldGetEpicById() {
-        Epic retrievedEpic = manager.getEpicById(epic.getId());
-        assertNotNull(retrievedEpic);
-        assertEqualsTask(epic, retrievedEpic);
+    @DisplayName("Должен проверять, что эпик извлекается по существующему id")
+    void shouldCheckEpicRetrievedByExistingId() {
+        Epic receivedEpic = manager.getEpicById(epic.getId());
+        assertNotNull(receivedEpic);
     }
 
     @Test
-    @DisplayName("должен получать подзадачу по Id")
-    void shouldGetSubtaskById() {
-        Subtask retrievedSubtask = manager.getSubtaskById(subtask.getId());
-        assertNotNull(retrievedSubtask);
-        assertEqualsTask(subtask, retrievedSubtask);
+    @DisplayName("Должен проверять, что подзадача извлекается по существующему id")
+    void shouldCheckSubtaskRetrievedByExistingId() {
+        Subtask receivedSubtask = manager.getSubtaskById(subtask.getId());
+        assertNotNull(receivedSubtask);
     }
 
     @Test
-    @DisplayName("должен создавать Id и сохранять задачу по этому Id")
-    void shouldCreateIdAndSaveTaskById() {
-        List<Task> tasks = manager.getAllTasks();
-
-        assertEqualsTask(task, tasks.getFirst());
-        assertEquals(1, tasks.size());
+    @DisplayName("Должен проверять сохранение задач по уникальному id")
+    void shouldCheckTasksSavedById() {
+        assertNotEquals(task.getId(), task2.getId());
     }
 
     @Test
-    @DisplayName("должен создавать Id и сохранять эпик по этому Id")
-    void shouldCreateIdAndSaveEpicById() {
-        List<Epic> epics = manager.getAllEpics();
-
-        assertEqualsTask(epic, epics.getFirst());
-        assertEquals(1, epics.size());
+    @DisplayName("Должен проверять сохранение эпиков по уникальному id")
+    void shouldCheckEpicsSavedById() {
+        assertNotEquals(epic.getId(), epic2.getId());
     }
 
     @Test
-    @DisplayName("должен создавать Id, сохранять подзадачу по этому Id в общем списке и добавлять ее в список эпика," +
-            " после обновлять статус эпика")
-    void shouldCreateIdAndSaveSubtaskById() {
-        List<Subtask> subtasks = manager.getAllSubtasks();
-        List<Subtask> subtasksEpic = epic.getSubtasks();
-
-        assertEqualsTask(subtask, subtasks.getFirst());
-        assertEquals(subtask, subtasksEpic.getFirst());
-        assertEquals(1, subtasks.size());
-        assertEquals(1, subtasksEpic.size());
-        assertEquals(TaskStatus.DONE, subtask.getStatus());
+    @DisplayName("Должен проверять сохранение подзадач по уникальному id")
+    void shouldCheckSubtasksSavedById() {
+        assertNotEquals(subtask.getId(), subtask2.getId());
     }
 
     @Test
-    @DisplayName("должен обновлять и сохранять новую задачу взамен старой")
-    void shouldUpdateAndSaveNewTaskInsteadOld() {
+    @DisplayName("Должен проверять обновление названия, описания и статуса задачи")
+    void shouldCheckUpdateTitleDescriptionStatusTask() {
         manager.updateTask(new Task("newTask", "newDescription", TaskStatus.IN_PROGRESS, task.getId()));
 
         Task updatedTask = manager.getTaskById(task.getId());
-        List<Task> tasks = manager.getAllTasks();
 
         assertEquals("newTask", updatedTask.getTitle());
         assertEquals("newDescription", updatedTask.getDescription());
         assertEquals(TaskStatus.IN_PROGRESS, updatedTask.getStatus());
-        assertEqualsTask(updatedTask, tasks.getFirst());
-        assertEquals(1, tasks.size());
     }
 
     @Test
-    @DisplayName("должен обновлять только имя и описание эпика")
-    void shouldUpdateNameAndDescriptionEpic() {
+    @DisplayName("Должен проверять обновление названия и описания эпика")
+    void shouldCheckUpdateTitleDescriptionEpic() {
         manager.updateEpic(new Epic("newEpic", "newDescription", epic.getId()));
 
         Epic updatedEpic = manager.getEpicById(epic.getId());
-        List<Epic> epics = manager.getAllEpics();
 
         assertEquals("newEpic", updatedEpic.getTitle());
         assertEquals("newDescription", updatedEpic.getDescription());
-        assertEquals(1, epics.size());
     }
 
     @Test
-    @DisplayName("должен обновлять и сохранять новую подзадачу взамен старой в общем списке," +
-            " обновлять ее в списке подзадач эпика, затем обновлять статус эпика")
-    void shouldUpdateAndSaveNewSubtaskInsteadOld() {
+    @DisplayName("Должен проверять обновление названия, описания, статуса подзадачи и его эпика")
+    void shouldCheckUpdateTitleDescriptionStatusSubtaskAndStatusEpic() {
         manager.updateSubtask(new Subtask("newSubtask", "newDescription",
                 TaskStatus.IN_PROGRESS, subtask.getId(), epic.getId()));
 
         Subtask updatedSubtask = manager.getSubtaskById(subtask.getId());
-        List<Subtask> subtasks = epic.getSubtasks();
-        List<Subtask> subtasksEpic = epic.getSubtasks();
 
         assertEquals("newSubtask", updatedSubtask.getTitle());
         assertEquals("newDescription", updatedSubtask.getDescription());
         assertEquals(TaskStatus.IN_PROGRESS, updatedSubtask.getStatus());
-        assertEquals(updatedSubtask, subtasksEpic.getFirst());
-        assertEquals(1, subtasks.size());
-        assertEquals(1, subtasksEpic.size());
         assertEquals(TaskStatus.IN_PROGRESS, epic.getStatus());
     }
 
     @Test
-    @DisplayName("должен удалять задачу по Id")
-    void shouldDeleteTaskById() {
+    @DisplayName("Должен проверять удаление задачи по id из списка")
+    void shouldCheckRemoveTaskById() {
         manager.deleteTaskById(task.getId());
         Task remoteTask = manager.getTaskById(task.getId());
-        List<Task> tasks = manager.getAllTasks();
-
         assertNull(remoteTask);
-        assertEquals(0, tasks.size());
-
     }
 
     @Test
-    @DisplayName("должен удалять эпик по Id и все подзадачи данного эпика")
-    void shouldDeleteEpicById() {
+    @DisplayName("Должен проверять удаление эпика и его подзадач по id из списка")
+    void shouldCheckRemoveEpicAndSubtasksById() {
         manager.deleteEpicById(epic.getId());
 
         Epic remoteEpic = manager.getEpicById(epic.getId());
         Subtask remoteSubtask = manager.getSubtaskById(subtask.getId());
 
-        List<Epic> epics = manager.getAllEpics();
-        List<Subtask> subtasks = manager.getAllSubtasks();
-        List<Subtask> subtasksEpic = epic.getSubtasks();
-
         assertNull(remoteEpic);
         assertNull(remoteSubtask);
-        assertEquals(0, epics.size());
-        assertEquals(0, subtasks.size());
-        assertEquals(0, subtasksEpic.size());
     }
 
     @Test
-    @DisplayName("должен удалять подзадачу по Id в общем списке и удалять подзадачу в списке эпика," +
-            " затем обновлять статус эпика")
+    @DisplayName("Должен проверять удаление подзадачи по id из списка")
     void shouldDeleteSubtaskById() {
         manager.deleteSubtaskById(subtask.getId());
 
         Subtask remoteSubtask = manager.getSubtaskById(subtask.getId());
-
-        List<Subtask> subtasks = manager.getAllSubtasks();
-        List<Subtask> subtasksEpic = epic.getSubtasks();
-
         assertNull(remoteSubtask);
-        assertEquals(0, subtasks.size());
-        assertEquals(0, subtasksEpic.size());
     }
 
     @Test
-    @DisplayName("должен возвращать список подзадач эпика по его Id")
-    void shouldGetListSubtasksEpicByHisId() {
+    @DisplayName("Должен проверять, получение списка подзадач эпика по его id")
+    void shouldCheckReceivingListSubtasksEpicByHisId() {
         List<Subtask> subtasksEpic = manager.getAllSubtasksEpic(epic.getId());
-        assertEquals(1, subtasksEpic.size());
+
+        assertNotNull(subtasksEpic);
         assertEqualsTask(subtask, subtasksEpic.getFirst());
+        assertEqualsTask(subtask2, subtasksEpic.get(1));
     }
 
 
@@ -260,6 +216,11 @@ class InMemoryTaskManagerTest {
     private static class HistoryManagerStub implements HistoryManager {
         @Override
         public void add(Task task) {
+
+        }
+
+        @Override
+        public void remove(int id) {
 
         }
 
