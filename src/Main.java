@@ -51,10 +51,12 @@ public class Main {
         manager.getTaskById(idTask2);
         manager.getEpicById(idEpic1);
         manager.getSubtaskById(idSubtask1ForEpic1);
-        manager.getTaskById(idTask2);
-        manager.getSubtaskById(idSubtask1ForEpic1);
+        manager.getSubtaskById(idSubtask2ForEpic1);
         manager.getTaskById(idTask1);
+        manager.getTaskById(idTask2);
         manager.getEpicById(idEpic1);
+        manager.getSubtaskById(idSubtask1ForEpic1);
+        manager.getSubtaskById(idSubtask2ForEpic1);
 
         /*System.out.println("Tasks (updating and deletion):\n" + manager.getAllTasks() + "\n");
         System.out.println("Epics (updating and deletion):\n" + manager.getAllEpics() + "\n");
