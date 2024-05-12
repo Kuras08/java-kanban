@@ -11,9 +11,8 @@ public class InMemoryHistoryManager implements HistoryManager {
 
     private final Map<Integer, Node> history = new HashMap<>();
 
-    Node first;
-
-    Node last;
+    private Node first;
+    private Node last;
 
     private void linkLast(Task task) {
         final Node l = last;

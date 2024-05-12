@@ -8,6 +8,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @DisplayName("InMemoryHistoryManager")
@@ -46,15 +48,7 @@ class InMemoryHistoryManagerTest {
     @Test
     @DisplayName("Должен проверять, что список хранит только уникальные элементы")
     void shouldCheckStoresOnlyUniqueElements() {
-        historyManager.add(task);
-        historyManager.add(task);
-        historyManager.add(epic);
-        historyManager.add(epic);
-        historyManager.add(subtask);
-        historyManager.add(subtask);
-        historyManager.add(subtask2);
-        historyManager.add(subtask2);
-
+        List.of(task, task, epic, epic, subtask, subtask2).forEach(historyManager::add);
         assertEquals(4, historyManager.getHistory().size());
     }
 

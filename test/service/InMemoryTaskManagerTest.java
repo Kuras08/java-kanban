@@ -188,9 +188,8 @@ class InMemoryTaskManagerTest {
 
     @Test
     @DisplayName("Должен проверять удаление подзадачи по id из списка")
-    void shouldDeleteSubtaskById() {
+    void shouldCheckRemoveSubtaskById() {
         manager.deleteSubtaskById(subtask.getId());
-
         Subtask remoteSubtask = manager.getSubtaskById(subtask.getId());
         assertNull(remoteSubtask);
     }
