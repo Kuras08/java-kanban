@@ -19,7 +19,6 @@ class InMemoryHistoryManagerTest {
     Task task;
     Epic epic;
     Subtask subtask;
-    Subtask subtask2;
 
     @BeforeEach
     public void beforeEach() {
@@ -29,10 +28,7 @@ class InMemoryHistoryManagerTest {
         epic = new Epic("Epic1", "Description", 2);
         subtask = new Subtask("Subtask1ForEpic1", "Description",
                 TaskStatus.NEW, 3, epic.getId());
-        subtask2 = new Subtask("Subtask2ForEpic1", "Description",
-                TaskStatus.IN_PROGRESS, 4, epic.getId());
     }
-
 
     @Test
     @DisplayName("Должен проверять добавление задач, эпиков и подзадач в список истории")
@@ -40,16 +36,15 @@ class InMemoryHistoryManagerTest {
         historyManager.add(task);
         historyManager.add(epic);
         historyManager.add(subtask);
-        historyManager.add(subtask2);
 
-        assertEquals(4, historyManager.getHistory().size());
+        assertEquals(3, historyManager.getHistory().size());
     }
 
     @Test
     @DisplayName("Должен проверять, что список хранит только уникальные элементы")
     void shouldCheckStoresOnlyUniqueElements() {
-        List.of(task, task, epic, epic, subtask, subtask2).forEach(historyManager::add);
-        assertEquals(4, historyManager.getHistory().size());
+        List.of(task, task, epic, epic, subtask, subtask).forEach(historyManager::add);
+        assertEquals(3, historyManager.getHistory().size());
     }
 
     @Test

@@ -5,6 +5,8 @@ import model.TaskStatus;
 import service.Managers;
 import service.TaskManager;
 
+import java.util.List;
+
 public class Main {
     public static void main(String[] args) {
 
@@ -47,16 +49,9 @@ public class Main {
         manager.updateSubtask(new Subtask("newSubtask1ForEpic1", "newDescription",
                 DONE, idSubtask1ForEpic1, idEpic1));*/
 
-        manager.getTaskById(idTask1);
-        manager.getTaskById(idTask2);
-        manager.getEpicById(idEpic1);
-        manager.getSubtaskById(idSubtask1ForEpic1);
-        manager.getSubtaskById(idSubtask2ForEpic1);
-        manager.getTaskById(idTask1);
-        manager.getTaskById(idTask2);
-        manager.getEpicById(idEpic1);
-        manager.getSubtaskById(idSubtask1ForEpic1);
-        manager.getSubtaskById(idSubtask2ForEpic1);
+        List.of(idTask1, idTask2).forEach(manager::getTaskById);
+        List.of(idEpic1, idEpic2).forEach(manager::getEpicById);
+        List.of(idSubtask1ForEpic1, idSubtask2ForEpic1).forEach(manager::getSubtaskById);
 
         /*System.out.println("Tasks (updating and deletion):\n" + manager.getAllTasks() + "\n");
         System.out.println("Epics (updating and deletion):\n" + manager.getAllEpics() + "\n");

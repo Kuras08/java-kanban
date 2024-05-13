@@ -14,6 +14,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @DisplayName("InMemoryTaskManagerTest")
 class InMemoryTaskManagerTest {
+
     TaskManager manager;
     HistoryManagerStub historyManager;
     Task task;
@@ -37,6 +38,7 @@ class InMemoryTaskManagerTest {
                 TaskStatus.IN_PROGRESS, epic.getId()));
         epic2 = manager.createEpic(new Epic("Epic2", "Description"));
     }
+
 
     @Test
     @DisplayName("Должен проверять, что возвращаемый список содержит задачи")
