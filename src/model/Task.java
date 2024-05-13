@@ -3,9 +3,13 @@ package model;
 import java.util.Objects;
 
 public class Task {
+
     private String title;
+
     private String description;
+
     private TaskStatus status;
+
     private int id;
 
     public Task(String title, String description, TaskStatus status) {

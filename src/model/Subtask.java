@@ -1,6 +1,7 @@
 package model;
 
 public class Subtask extends Task {
+
     private final int epicId;
 
     public Subtask(String title, String description, TaskStatus status, int epicId) {
@@ -26,6 +27,5 @@ public class Subtask extends Task {
                 ", id=" + getId() +
                 ", epicId=" + epicId +
                 '}';
-
     }
 }
