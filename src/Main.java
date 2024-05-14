@@ -69,6 +69,7 @@ public class Main {
         System.out.println("History (deletion) :");
         for (Task task : manager.getHistory()) {
             System.out.println(task);
+            Женя привет !
         }
     }
 }
