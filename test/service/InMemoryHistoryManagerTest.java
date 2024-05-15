@@ -24,7 +24,7 @@ class InMemoryHistoryManagerTest {
     public void beforeEach() {
         historyManager = new InMemoryHistoryManager();
 
-        task = new Task("Task1", "description", TaskStatus.NEW, 1);
+        task = new Task("Task1", "Description", TaskStatus.NEW, 1);
         epic = new Epic("Epic1", "Description", 2);
         subtask = new Subtask("Subtask1ForEpic1", "Description",
                 TaskStatus.NEW, 3, epic.getId());

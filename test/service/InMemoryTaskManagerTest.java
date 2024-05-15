@@ -64,7 +64,7 @@ class InMemoryTaskManagerTest {
     @Test
     @DisplayName("Должен проверять, что все задачи удалены из списка")
     void shouldCheckRemoveAllTasksFromList() {
-        manager.deleteAllTasks();
+        manager.removeAllTasksFromManager();
         List<Task> tasks = manager.getAllTasks();
         assertEquals(0, tasks.size());
     }
@@ -72,7 +72,7 @@ class InMemoryTaskManagerTest {
     @Test
     @DisplayName("Должен проверять, что все эпики и подзадачи удалены из списков")
     void shouldCheckRemoveAllEpicsAndSubtasksFromLists() {
-        manager.deleteAllEpics();
+        manager.removeAllEpicsFromManager();
         List<Epic> epics = manager.getAllEpics();
         List<Subtask> subtasks = manager.getAllSubtasks();
 
@@ -83,7 +83,7 @@ class InMemoryTaskManagerTest {
     @Test
     @DisplayName("Должен проверять, что подзадачи удалены из списков")
     void shouldCheckRemoveAllSubtasksFromLists() {
-        manager.deleteAllSubtasks();
+        manager.removeAllSubtasksFromManager();
 
         List<Subtask> subtasks = manager.getAllSubtasks();
         List<Subtask> epicSubtasks = manager.getAllSubtasksEpic(epic.getId());
@@ -171,7 +171,7 @@ class InMemoryTaskManagerTest {
     @Test
     @DisplayName("Должен проверять удаление задачи по id из списка")
     void shouldCheckRemoveTaskById() {
-        manager.deleteTaskById(task.getId());
+        manager.removeTaskById(task.getId());
         Task remoteTask = manager.getTaskById(task.getId());
         assertNull(remoteTask);
     }
@@ -179,7 +179,7 @@ class InMemoryTaskManagerTest {
     @Test
     @DisplayName("Должен проверять удаление эпика и его подзадач по id из списка")
     void shouldCheckRemoveEpicAndSubtasksById() {
-        manager.deleteEpicById(epic.getId());
+        manager.removeEpicById(epic.getId());
 
         Epic remoteEpic = manager.getEpicById(epic.getId());
         Subtask remoteSubtask = manager.getSubtaskById(subtask.getId());
@@ -191,7 +191,7 @@ class InMemoryTaskManagerTest {
     @Test
     @DisplayName("Должен проверять удаление подзадачи по id из списка")
     void shouldCheckRemoveSubtaskById() {
-        manager.deleteSubtaskById(subtask.getId());
+        manager.removeSubtaskById(subtask.getId());
         Subtask remoteSubtask = manager.getSubtaskById(subtask.getId());
         assertNull(remoteSubtask);
     }

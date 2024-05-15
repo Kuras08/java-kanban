@@ -62,8 +62,8 @@ public class Main {
             System.out.println(task);
         }
 
-        manager.deleteTaskById(idTask2);
-        manager.deleteEpicById(idEpic1);
+        manager.removeTaskById(idTask2);
+        manager.removeEpicById(idEpic1);
         System.out.println();
 
         System.out.println("History (deletion) :");

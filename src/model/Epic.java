@@ -19,11 +19,11 @@ public class Epic extends Task {
         subtasks.add(subtask);
     }
 
-    public void deleteSubtask(Subtask subtask) {
+    public void removeSubtask(Subtask subtask) {
         subtasks.remove(subtask);
     }
 
-    public void deleteAllSubtasks() {
+    public void removeAllSubtasks() {
         subtasks.clear();
     }
 
