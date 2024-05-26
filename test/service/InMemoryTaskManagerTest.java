@@ -12,6 +12,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+
 @DisplayName("InMemoryTaskManagerTest")
 class InMemoryTaskManagerTest {
 
@@ -138,7 +139,7 @@ class InMemoryTaskManagerTest {
 
         Task updatedTask = manager.getTaskById(task.getId());
 
-        assertEquals("newTask", updatedTask.getTitle());
+        assertEquals("newTask", updatedTask.getName());
         assertEquals("newDescription", updatedTask.getDescription());
         assertEquals(TaskStatus.IN_PROGRESS, updatedTask.getStatus());
     }
@@ -150,7 +151,7 @@ class InMemoryTaskManagerTest {
 
         Epic updatedEpic = manager.getEpicById(epic.getId());
 
-        assertEquals("newEpic", updatedEpic.getTitle());
+        assertEquals("newEpic", updatedEpic.getName());
         assertEquals("newDescription", updatedEpic.getDescription());
     }
 
@@ -162,7 +163,7 @@ class InMemoryTaskManagerTest {
 
         Subtask updatedSubtask = manager.getSubtaskById(subtask.getId());
 
-        assertEquals("newSubtask", updatedSubtask.getTitle());
+        assertEquals("newSubtask", updatedSubtask.getName());
         assertEquals("newDescription", updatedSubtask.getDescription());
         assertEquals(TaskStatus.IN_PROGRESS, updatedSubtask.getStatus());
         assertEquals(TaskStatus.IN_PROGRESS, epic.getStatus());
@@ -208,7 +209,7 @@ class InMemoryTaskManagerTest {
 
 
     private static void assertEqualsTask(Task expected, Task actual) {
-        assertEquals(expected.getTitle(), actual.getTitle());
+        assertEquals(expected.getName(), actual.getName());
         assertEquals(expected.getDescription(), actual.getDescription());
         assertEquals(expected.getStatus(), actual.getStatus());
         assertEquals(expected.getId(), actual.getId());
