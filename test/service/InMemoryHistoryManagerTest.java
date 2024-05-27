@@ -49,7 +49,6 @@ class InMemoryHistoryManagerTest {
     void shouldCheckRemoveTasksEpicsAndSubtasksFromListHistory() {
         List.of(task, epic, subtask).forEach(historyManager::add);
         List.of(1, 2, 3).forEach(historyManager::remove);
-
         assertEquals(0, historyManager.getHistory().size());
     }
 }

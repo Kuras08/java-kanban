@@ -48,7 +48,6 @@ public class InMemoryHistoryManager implements HistoryManager {
         } else {
             last = node.prev;
         }
-        history.remove(node.item.getId());
     }
 
     @Override
@@ -66,6 +65,7 @@ public class InMemoryHistoryManager implements HistoryManager {
         Node node = history.get(id);
         if (node != null) {
             removeNode(node);
+            history.remove(id);
         }
     }
 

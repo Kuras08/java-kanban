@@ -52,8 +52,12 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public Task getTaskById(int id) {
-        historyManager.add(tasks.get(id));
-        return tasks.get(id);
+        Task task = tasks.get(id);
+        if (task == null) {
+            throw new IllegalArgumentException("Task with id " + id + " not found");
+        }
+        historyManager.add(task);
+        return task;
     }
 
     @Override
@@ -70,8 +74,11 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void removeTaskById(int id) {
+        Task task = tasks.remove(id);
+        if (task == null) {
+            throw new IllegalArgumentException("Task with id " + id + " not found");
+        }
         historyManager.remove(id);
-        tasks.remove(id);
     }
 
     @Override
@@ -89,7 +96,11 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public Epic getEpicById(int id) {
-        historyManager.add(epics.get(id));
+        Epic epic = epics.get(id);
+        if (epic == null) {
+            throw new IllegalArgumentException("Epic with id " + id + " not found");
+        }
+        historyManager.add(epic);
         return epics.get(id);
     }
 
@@ -103,7 +114,6 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public void updateEpic(Epic epic) {
         Epic savedEpic = epics.get(epic.getId());
-
         if (savedEpic == null) {
             throw new IllegalArgumentException("Epic with id " + epic.getId() + " not found");
         }
@@ -168,14 +178,17 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public Subtask getSubtaskById(int id) {
-        historyManager.add(subtasks.get(id));
+        Subtask subtask = subtasks.get(id);
+        if (subtask == null) {
+            throw new IllegalArgumentException("Subtask with id " + id + " not found");
+        }
+        historyManager.add(subtask);
         return subtasks.get(id);
     }
 
     @Override
     public Subtask createSubtask(Subtask subtask) {
         Epic epic = epics.get(subtask.getEpicId());
-
         if (epic == null) {
             throw new IllegalArgumentException("Epic with id " + subtask.getEpicId() + " not found");
         }
@@ -190,7 +203,6 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public void updateSubtask(Subtask subtask) {
         Epic epic = epics.get(subtask.getEpicId());
-
         if (epic == null) {
             throw new IllegalArgumentException("Epic with id " + subtask.getEpicId() + " not found");
         }
@@ -203,7 +215,6 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public void removeSubtaskById(int id) {
         Subtask subtask = subtasks.remove(id);
-
         if (subtask == null) {
             throw new IllegalArgumentException("Subtask with id " + id + " not found");
         }
@@ -217,7 +228,6 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public List<Subtask> getAllSubtasksEpic(int id) {
         Epic epic = epics.get(id);
-
         if (epic == null) {
             throw new IllegalArgumentException("Epic with id " + id + " not found");
         }

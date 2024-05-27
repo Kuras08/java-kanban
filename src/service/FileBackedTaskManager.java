@@ -1,5 +1,6 @@
 package service;
 
+import exceptions.ManagerLoadException;
 import exceptions.ManagerSaveException;
 import model.*;
 
@@ -48,7 +49,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                 maxId = Math.max(maxId, id);
             }
         } catch (IOException e) {
-            throw new ManagerSaveException("Error reading file!");
+            throw new ManagerLoadException("Error reading file!");
         }
         manager.idCounter = maxId;
         return manager;
@@ -85,10 +86,11 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         return switch (type) {
             case TASK -> new Task(name, description, status, id);
             case EPIC -> new Epic(name, description, status, id);
-            default -> {
+            case SUBTASK -> {
                 int epicId = Integer.parseInt(parts[5]);
                 yield new Subtask(name, description, status, id, epicId);
             }
+            default -> throw new IllegalArgumentException("Unknown task type: " + type);
         };
     }
 

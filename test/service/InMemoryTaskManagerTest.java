@@ -36,10 +36,9 @@ class InMemoryTaskManagerTest {
         subtask = manager.createSubtask(new Subtask("Subtask1ForEpic1", "Description",
                 TaskStatus.NEW, epic.getId()));
         subtask2 = manager.createSubtask(new Subtask("Subtask2ForEpic1", "Description",
-                TaskStatus.IN_PROGRESS, epic.getId()));
+                TaskStatus.NEW, epic.getId()));
         epic2 = manager.createEpic(new Epic("Epic2", "Description"));
     }
-
 
     @Test
     @DisplayName("Должен проверять, что возвращаемый список содержит задачи")
@@ -156,16 +155,16 @@ class InMemoryTaskManagerTest {
     }
 
     @Test
-    @DisplayName("Должен проверять обновление названия, описания, статуса подзадачи и его эпика")
+    @DisplayName("Должен проверять обновление названия, описания, статуса подзадачи и статуса ее эпика")
     void shouldCheckUpdateTitleDescriptionStatusSubtaskAndStatusEpic() {
         manager.updateSubtask(new Subtask("newSubtask", "newDescription",
-                TaskStatus.IN_PROGRESS, subtask.getId(), epic.getId()));
+                TaskStatus.DONE, subtask.getId(), epic.getId()));
 
         Subtask updatedSubtask = manager.getSubtaskById(subtask.getId());
 
         assertEquals("newSubtask", updatedSubtask.getName());
         assertEquals("newDescription", updatedSubtask.getDescription());
-        assertEquals(TaskStatus.IN_PROGRESS, updatedSubtask.getStatus());
+        assertEquals(TaskStatus.DONE, updatedSubtask.getStatus());
         assertEquals(TaskStatus.IN_PROGRESS, epic.getStatus());
     }
 
@@ -173,28 +172,21 @@ class InMemoryTaskManagerTest {
     @DisplayName("Должен проверять удаление задачи по id из списка")
     void shouldCheckRemoveTaskById() {
         manager.removeTaskById(task.getId());
-        Task remoteTask = manager.getTaskById(task.getId());
-        assertNull(remoteTask);
+        assertThrows(IllegalArgumentException.class, () -> manager.getTaskById(task.getId()));
     }
 
     @Test
-    @DisplayName("Должен проверять удаление эпика и его подзадач по id из списка")
+    @DisplayName("Должен проверять удаление эпика по id из списка")
     void shouldCheckRemoveEpicAndSubtasksById() {
         manager.removeEpicById(epic.getId());
-
-        Epic remoteEpic = manager.getEpicById(epic.getId());
-        Subtask remoteSubtask = manager.getSubtaskById(subtask.getId());
-
-        assertNull(remoteEpic);
-        assertNull(remoteSubtask);
+        assertThrows(IllegalArgumentException.class, () -> manager.getEpicById(epic.getId()));
     }
 
     @Test
     @DisplayName("Должен проверять удаление подзадачи по id из списка")
     void shouldCheckRemoveSubtaskById() {
         manager.removeSubtaskById(subtask.getId());
-        Subtask remoteSubtask = manager.getSubtaskById(subtask.getId());
-        assertNull(remoteSubtask);
+        assertThrows(IllegalArgumentException.class, () -> manager.getSubtaskById(subtask.getId()));
     }
 
     @Test
