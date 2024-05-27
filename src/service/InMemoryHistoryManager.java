@@ -48,14 +48,10 @@ public class InMemoryHistoryManager implements HistoryManager {
         } else {
             last = node.prev;
         }
-        history.remove(node.item.getId());
     }
 
     @Override
     public void add(Task task) {
-        if (task == null) {
-            return;
-        }
         Node node = history.get(task.getId());
         if (node != null) {
             removeNode(node);
@@ -69,6 +65,7 @@ public class InMemoryHistoryManager implements HistoryManager {
         Node node = history.get(id);
         if (node != null) {
             removeNode(node);
+            history.remove(id);
         }
     }
 

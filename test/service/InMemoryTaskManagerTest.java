@@ -12,6 +12,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+
 @DisplayName("InMemoryTaskManagerTest")
 class InMemoryTaskManagerTest {
 
@@ -35,10 +36,9 @@ class InMemoryTaskManagerTest {
         subtask = manager.createSubtask(new Subtask("Subtask1ForEpic1", "Description",
                 TaskStatus.NEW, epic.getId()));
         subtask2 = manager.createSubtask(new Subtask("Subtask2ForEpic1", "Description",
-                TaskStatus.IN_PROGRESS, epic.getId()));
+                TaskStatus.NEW, epic.getId()));
         epic2 = manager.createEpic(new Epic("Epic2", "Description"));
     }
-
 
     @Test
     @DisplayName("Должен проверять, что возвращаемый список содержит задачи")
@@ -64,7 +64,7 @@ class InMemoryTaskManagerTest {
     @Test
     @DisplayName("Должен проверять, что все задачи удалены из списка")
     void shouldCheckRemoveAllTasksFromList() {
-        manager.deleteAllTasks();
+        manager.removeAllTasksFromManager();
         List<Task> tasks = manager.getAllTasks();
         assertEquals(0, tasks.size());
     }
@@ -72,7 +72,7 @@ class InMemoryTaskManagerTest {
     @Test
     @DisplayName("Должен проверять, что все эпики и подзадачи удалены из списков")
     void shouldCheckRemoveAllEpicsAndSubtasksFromLists() {
-        manager.deleteAllEpics();
+        manager.removeAllEpicsFromManager();
         List<Epic> epics = manager.getAllEpics();
         List<Subtask> subtasks = manager.getAllSubtasks();
 
@@ -83,7 +83,7 @@ class InMemoryTaskManagerTest {
     @Test
     @DisplayName("Должен проверять, что подзадачи удалены из списков")
     void shouldCheckRemoveAllSubtasksFromLists() {
-        manager.deleteAllSubtasks();
+        manager.removeAllSubtasksFromManager();
 
         List<Subtask> subtasks = manager.getAllSubtasks();
         List<Subtask> epicSubtasks = manager.getAllSubtasksEpic(epic.getId());
@@ -138,7 +138,7 @@ class InMemoryTaskManagerTest {
 
         Task updatedTask = manager.getTaskById(task.getId());
 
-        assertEquals("newTask", updatedTask.getTitle());
+        assertEquals("newTask", updatedTask.getName());
         assertEquals("newDescription", updatedTask.getDescription());
         assertEquals(TaskStatus.IN_PROGRESS, updatedTask.getStatus());
     }
@@ -150,50 +150,43 @@ class InMemoryTaskManagerTest {
 
         Epic updatedEpic = manager.getEpicById(epic.getId());
 
-        assertEquals("newEpic", updatedEpic.getTitle());
+        assertEquals("newEpic", updatedEpic.getName());
         assertEquals("newDescription", updatedEpic.getDescription());
     }
 
     @Test
-    @DisplayName("Должен проверять обновление названия, описания, статуса подзадачи и его эпика")
+    @DisplayName("Должен проверять обновление названия, описания, статуса подзадачи и статуса ее эпика")
     void shouldCheckUpdateTitleDescriptionStatusSubtaskAndStatusEpic() {
         manager.updateSubtask(new Subtask("newSubtask", "newDescription",
-                TaskStatus.IN_PROGRESS, subtask.getId(), epic.getId()));
+                TaskStatus.DONE, subtask.getId(), epic.getId()));
 
         Subtask updatedSubtask = manager.getSubtaskById(subtask.getId());
 
-        assertEquals("newSubtask", updatedSubtask.getTitle());
+        assertEquals("newSubtask", updatedSubtask.getName());
         assertEquals("newDescription", updatedSubtask.getDescription());
-        assertEquals(TaskStatus.IN_PROGRESS, updatedSubtask.getStatus());
+        assertEquals(TaskStatus.DONE, updatedSubtask.getStatus());
         assertEquals(TaskStatus.IN_PROGRESS, epic.getStatus());
     }
 
     @Test
     @DisplayName("Должен проверять удаление задачи по id из списка")
     void shouldCheckRemoveTaskById() {
-        manager.deleteTaskById(task.getId());
-        Task remoteTask = manager.getTaskById(task.getId());
-        assertNull(remoteTask);
+        manager.removeTaskById(task.getId());
+        assertThrows(IllegalArgumentException.class, () -> manager.getTaskById(task.getId()));
     }
 
     @Test
-    @DisplayName("Должен проверять удаление эпика и его подзадач по id из списка")
+    @DisplayName("Должен проверять удаление эпика по id из списка")
     void shouldCheckRemoveEpicAndSubtasksById() {
-        manager.deleteEpicById(epic.getId());
-
-        Epic remoteEpic = manager.getEpicById(epic.getId());
-        Subtask remoteSubtask = manager.getSubtaskById(subtask.getId());
-
-        assertNull(remoteEpic);
-        assertNull(remoteSubtask);
+        manager.removeEpicById(epic.getId());
+        assertThrows(IllegalArgumentException.class, () -> manager.getEpicById(epic.getId()));
     }
 
     @Test
     @DisplayName("Должен проверять удаление подзадачи по id из списка")
     void shouldCheckRemoveSubtaskById() {
-        manager.deleteSubtaskById(subtask.getId());
-        Subtask remoteSubtask = manager.getSubtaskById(subtask.getId());
-        assertNull(remoteSubtask);
+        manager.removeSubtaskById(subtask.getId());
+        assertThrows(IllegalArgumentException.class, () -> manager.getSubtaskById(subtask.getId()));
     }
 
     @Test
@@ -208,7 +201,7 @@ class InMemoryTaskManagerTest {
 
 
     private static void assertEqualsTask(Task expected, Task actual) {
-        assertEquals(expected.getTitle(), actual.getTitle());
+        assertEquals(expected.getName(), actual.getName());
         assertEquals(expected.getDescription(), actual.getDescription());
         assertEquals(expected.getStatus(), actual.getStatus());
         assertEquals(expected.getId(), actual.getId());

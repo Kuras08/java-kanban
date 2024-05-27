@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 
-@DisplayName("Task")
+@DisplayName("TaskTest")
 class TaskTest {
 
     @Test
@@ -18,7 +18,7 @@ class TaskTest {
     }
 
     private static void assertEqualsTask(Task expected, Task actual) {
-        assertEquals(expected.getTitle(), actual.getTitle());
+        assertEquals(expected.getName(), actual.getName());
         assertEquals(expected.getDescription(), actual.getDescription());
         assertEquals(expected.getStatus(), actual.getStatus());
         assertEquals(expected.getId(), actual.getId());

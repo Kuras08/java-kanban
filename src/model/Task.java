@@ -4,7 +4,7 @@ import java.util.Objects;
 
 public class Task {
 
-    private String title;
+    private String name;
 
     private String description;
 
@@ -12,25 +12,25 @@ public class Task {
 
     private int id;
 
-    public Task(String title, String description, TaskStatus status) {
-        this.title = title;
+    public Task(String name, String description, TaskStatus status) {
+        this.name = name;
         this.description = description;
         this.status = status;
     }
 
-    public Task(String title, String description, TaskStatus status, int id) {
-        this.title = title;
+    public Task(String name, String description, TaskStatus status, int id) {
+        this.name = name;
         this.description = description;
         this.status = status;
         this.id = id;
     }
 
-    public String getTitle() {
-        return title;
+    public String getName() {
+        return name;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getDescription() {
@@ -57,6 +57,14 @@ public class Task {
         this.id = id;
     }
 
+    public TaskType getType() {
+        return TaskType.TASK;
+    }
+
+    public Integer getEpicId() {
+        return null;
+    }
+
     @Override
     public boolean equals(Object obj) {
         if (this == obj) return true;
@@ -73,7 +81,7 @@ public class Task {
     @Override
     public String toString() {
         return "Task{" +
-                "title='" + title + '\'' +
+                "title='" + name + '\'' +
                 ", description='" + description + '\'' +
                 ", status=" + status +
                 ", id=" + id +
