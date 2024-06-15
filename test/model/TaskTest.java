@@ -3,6 +3,9 @@ package model;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 
@@ -12,8 +15,12 @@ class TaskTest {
     @Test
     @DisplayName("Должен проверять задачу со своей копией")
     void shouldEqualsWithCopy() {
-        Task task = new Task("Task1", "Description", TaskStatus.NEW);
-        Task taskExpected = new Task("Task1", "Description", TaskStatus.NEW);
+        Task task = new Task(1, "Task1", "Description", TaskStatus.NEW,
+                LocalDateTime.of(2024, 6, 15, 12, 0, 0), Duration.ofMinutes(15));
+
+        Task taskExpected = new Task(1, "Task1", "Description", TaskStatus.NEW,
+                LocalDateTime.of(2024, 6, 15, 12, 0, 0), Duration.ofMinutes(15));
+
         assertEqualsTask(taskExpected, task);
     }
 
