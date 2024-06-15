@@ -17,10 +17,13 @@ class TaskTest {
         assertEqualsTask(taskExpected, task);
     }
 
-    private static void assertEqualsTask(Task expected, Task actual) {
+    protected static void assertEqualsTask(Task expected, Task actual) {
+        assertEquals(expected.getId(), actual.getId());
         assertEquals(expected.getName(), actual.getName());
         assertEquals(expected.getDescription(), actual.getDescription());
         assertEquals(expected.getStatus(), actual.getStatus());
-        assertEquals(expected.getId(), actual.getId());
+        assertEquals(expected.getStartTime(), actual.getStartTime());
+        assertEquals(expected.getDuration(), actual.getDuration());
+        assertEquals(expected.getEndTime(), actual.getEndTime());
     }
 }

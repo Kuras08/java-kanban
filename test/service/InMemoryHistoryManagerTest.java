@@ -8,6 +8,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -22,12 +24,15 @@ class InMemoryHistoryManagerTest {
 
     @BeforeEach
     public void beforeEach() {
-        historyManager = new InMemoryHistoryManager();
+        historyManager = Managers.getDefaultHistory();
 
-        task = new Task("Task1", "Description", TaskStatus.NEW, 1);
-        epic = new Epic("Epic1", "Description", 2);
-        subtask = new Subtask("Subtask1ForEpic1", "Description",
-                TaskStatus.NEW, 3, epic.getId());
+        task = new Task(1, "Task1", "Description", TaskStatus.NEW,
+                LocalDateTime.now(), Duration.ZERO);
+
+        epic = new Epic(2, "Epic1", "Description");
+
+        subtask = new Subtask(3, 2, "Subtask1ForEpic1", "Description",
+                TaskStatus.NEW, LocalDateTime.now(), Duration.ZERO);
     }
 
     @Test

@@ -2,8 +2,11 @@ package service;
 
 public class Managers {
 
-    public static TaskManager getDefault() {
-        // return new InMemoryTaskManager(getDefaultHistory());
+    public static TaskManager getDefaultInMemory() {
+        return new InMemoryTaskManager(getDefaultHistory());
+    }
+
+    public static TaskManager getDefaultFileBacked() {
         return new FileBackedTaskManager(getDefaultHistory());
     }
 
