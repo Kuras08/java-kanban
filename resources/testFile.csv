@@ -1,7 +1,0 @@
-id,type,name,status,description,epic,duration,startTime
-1,TASK,Task1,NEW,Description,null,PT15M,2024-06-15T12:00
-2,TASK,Task2,DONE,Description,null,PT15M,2024-06-15T13:00
-3,EPIC,Epic1,IN_PROGRESS,Description,null,PT30M,2024-06-15T15:00
-4,SUBTASK,Subtask1ForEpic1,NEW,Description,3,PT15M,2024-06-15T15:00
-5,SUBTASK,Subtask2ForEpic1,IN_PROGRESS,Description,3,PT15M,2024-06-15T16:00
-6,EPIC,Epic2,NEW,Description,null,PT0S,2024-06-16T09:17:55.615732500

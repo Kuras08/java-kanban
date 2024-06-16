@@ -46,10 +46,8 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void removeAllTasksFromManager() {
-        tasks.keySet().stream()
-                .peek(historyManager::remove)
-                .map(tasks::get)
-                .forEach(prioritizedTasks::remove);
+        removeFromHistory(tasks.keySet());
+        prioritizedTasks.removeAll(tasks.values());
         tasks.clear();
     }
 
@@ -155,16 +153,14 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void removeAllSubtasksFromManager() {
-        subtasks.keySet().stream()
-                .peek(historyManager::remove)
-                .map(subtasks::get)
-                .forEach(prioritizedTasks::remove);
+        epics.values().forEach(epic -> {
+            epic.removeAllSubtasks();
+            calculateEpicStatus(epic);
+            calculateEpicTime(epic);
+        });
 
-        epics.values().stream()
-                .peek(Epic::removeAllSubtasks) // Удаление всех подзадач
-                .peek(this::calculateEpicStatus) // Пересчет статуса
-                .forEach(this::calculateEpicTime);
-
+        removeFromHistory(subtasks.keySet());
+        prioritizedTasks.removeAll(subtasks.values());
         subtasks.clear();
     }
 
@@ -243,14 +239,6 @@ public class InMemoryTaskManager implements TaskManager {
         return epic.getSubtasks();
     }
 
-    private int generateId() {
-        return ++idCounter;
-    }
-
-    private void removeFromHistory(Collection<Integer> ids) {
-        ids.forEach(historyManager::remove);
-    }
-
     protected void calculateEpicTime(Epic epic) {
         LocalDateTime startTime = null;
         Duration duration = Duration.ZERO;
@@ -272,6 +260,24 @@ public class InMemoryTaskManager implements TaskManager {
         epic.setEndTime(endTime);
     }
 
+    protected void checkTaskTime(Task currentTask) {
+        prioritizedTasks.stream()
+                .filter(existingTask -> existingTask.getId() != currentTask.getId())
+                .filter(existingTask -> checkTaskTimeIntersection(existingTask, currentTask))
+                .findFirst()
+                .ifPresent(existingTask -> {
+                    throw new ValidationException("Task " + currentTask.getId() + " intersects with task " + existingTask.getId());
+                });
+    }
+
+    private int generateId() {
+        return ++idCounter;
+    }
+
+    private void removeFromHistory(Collection<Integer> ids) {
+        ids.forEach(historyManager::remove);
+    }
+
     private void calculateEpicStatus(Epic epic) {
         if (epic.getSubtasks().isEmpty()) {
             epic.setStatus(TaskStatus.NEW);
@@ -287,16 +293,6 @@ public class InMemoryTaskManager implements TaskManager {
         } else {
             epic.setStatus(TaskStatus.IN_PROGRESS);
         }
-    }
-
-    protected void checkTaskTime(Task currentTask) {
-        prioritizedTasks.stream()
-                .filter(existingTask -> existingTask.getId() != currentTask.getId())
-                .filter(existingTask -> checkTaskTimeIntersection(existingTask, currentTask))
-                .findFirst()
-                .ifPresent(existingTask -> {
-                    throw new ValidationException("Task " + currentTask.getId() + " intersects with task " + existingTask.getId());
-                });
     }
 
     private boolean checkTaskTimeIntersection(Task existingTask, Task currentTask) {

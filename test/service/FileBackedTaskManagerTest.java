@@ -1,12 +1,14 @@
 package service;
 
+import exceptions.ManagerLoadException;
 import model.Task;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -17,16 +19,21 @@ public class FileBackedTaskManagerTest extends TaskManagerTest<FileBackedTaskMan
     private Path file;
     private TaskManager loadedTaskManager;
 
+    @Override
     @BeforeEach
     public void beforeEach() {
-        file = Paths.get("resources/testFile.csv");
+        try {
+            file = Files.createTempFile("testFile", "csv");
+        } catch (IOException e) {
+            throw new ManagerLoadException("Error reading file!");
+        }
         super.beforeEach();
         loadedTaskManager = FileBackedTaskManager.loadFromFile(file);
     }
 
     @Override
     protected FileBackedTaskManager createTaskManager() {
-        return new FileBackedTaskManager(Managers.getDefaultHistory(), file);
+        return FileBackedTaskManager.loadFromFile(file);
     }
 
     @Test

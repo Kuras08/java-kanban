@@ -20,6 +20,7 @@ import static org.junit.jupiter.api.Assertions.*;
 abstract class TaskManagerTest<T extends TaskManager> {
 
     protected T manager;
+    protected HistoryManagerStub historyManager;
     protected Task task;
     protected Task task2;
     protected Epic epic;
@@ -31,7 +32,7 @@ abstract class TaskManagerTest<T extends TaskManager> {
 
     @BeforeEach
     void beforeEach() {
-
+        historyManager = new HistoryManagerStub();
         manager = createTaskManager();
 
         task = manager.createTask(new Task("Task1", "Description", TaskStatus.NEW,

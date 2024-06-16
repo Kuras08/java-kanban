@@ -1,4 +1,0 @@
-id,type,name,status,description,epic,duration,startTime
-1,EPIC,Epic1,NEW,Description,null,PT30M,2024-06-15T15:00
-2,SUBTASK,Subtask1ForEpic1,NEW,Description,1,PT15M,2024-06-15T15:00
-3,SUBTASK,Subtask2ForEpic1,NEW,Description,1,PT15M,2024-06-15T16:00

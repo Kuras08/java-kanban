@@ -7,11 +7,9 @@ import org.junit.jupiter.api.DisplayName;
 @DisplayName("InMemoryTaskManagerTest")
 class InMemoryTaskManagerTest extends TaskManagerTest<InMemoryTaskManager> {
 
-    private HistoryManagerStub historyManager;
-
+    @Override
     @BeforeEach
     void beforeEach() {
-        historyManager = new HistoryManagerStub();
         super.beforeEach();
     }
 
