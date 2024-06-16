@@ -130,19 +130,34 @@ abstract class TaskManagerTest<T extends TaskManager> {
     @Test
     @DisplayName("Должен проверять сохранение задач по уникальному id")
     void shouldCheckTasksSavedById() {
-        assertNotEquals(task.getId(), task2.getId());
+        Task savedTask1 = manager.getTaskById(task.getId());
+        Task savedTask2 = manager.getTaskById(task2.getId());
+
+        assertNotNull(savedTask1);
+        assertNotNull(savedTask2);
+        assertNotEquals(savedTask1, savedTask2);
     }
 
     @Test
     @DisplayName("Должен проверять сохранение эпиков по уникальному id")
     void shouldCheckEpicsSavedById() {
-        assertNotEquals(epic.getId(), epic2.getId());
+        Epic savedEpic1 = manager.getEpicById(epic.getId());
+        Epic savedEpic2 = manager.getEpicById(epic2.getId());
+
+        assertNotNull(savedEpic1);
+        assertNotNull(savedEpic2);
+        assertNotEquals(savedEpic1, savedEpic2);
     }
 
     @Test
     @DisplayName("Должен проверять сохранение подзадач по уникальному id")
     void shouldCheckSubtasksSavedById() {
-        assertNotEquals(subtask.getId(), subtask2.getId());
+        Subtask savedSubtask1 = manager.getSubtaskById(subtask.getId());
+        Subtask savedSubtask2 = manager.getSubtaskById(subtask2.getId());
+
+        assertNotNull(savedSubtask1);
+        assertNotNull(savedSubtask2);
+        assertNotEquals(savedSubtask1, savedSubtask2);
     }
 
     @Test
