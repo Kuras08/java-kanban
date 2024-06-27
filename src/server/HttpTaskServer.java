@@ -1,18 +1,14 @@
 package server;
 
-import adapters.DurationAdapter;
-import adapters.LocalDateTimeAdapter;
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.sun.net.httpserver.HttpServer;
 import exceptions.ServerCreatingException;
 import handlers.*;
 import service.TaskManager;
+import util.GsonFactory;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
-import java.time.Duration;
-import java.time.LocalDateTime;
 
 public class HttpTaskServer {
 
@@ -31,7 +27,7 @@ public class HttpTaskServer {
         } catch (IOException exception) {
             throw new ServerCreatingException("Failed to create HTTP server on port " + PORT);
         }
-        this.gson = getGson();
+        this.gson = GsonFactory.createGson();
     }
 
     public void start() {
@@ -51,13 +47,5 @@ public class HttpTaskServer {
         httpServer.createContext("/subtasks", new SubtaskHandler(manager, gson));
         httpServer.createContext("/history", new HistoryHandler(manager, gson));
         httpServer.createContext("/prioritized", new PrioritizedHandler(manager, gson));
-    }
-
-    public static Gson getGson() {
-        return new GsonBuilder()
-                .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter())
-                .registerTypeAdapter(Duration.class, new DurationAdapter())
-                .excludeFieldsWithoutExposeAnnotation()
-                .create();
     }
 }

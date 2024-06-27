@@ -13,6 +13,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import service.Managers;
 import service.TaskManager;
+import util.GsonFactory;
 
 import java.io.IOException;
 import java.net.URI;
@@ -27,9 +28,9 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @DisplayName("HttpTaskServerTest")
 public class HttpTaskServerTest {
-    TaskManager manager = Managers.getDefaultInMemory();
-    HttpTaskServer taskServer = new HttpTaskServer(manager);
-    Gson gson = HttpTaskServer.getGson();
+    TaskManager manager;
+    HttpTaskServer taskServer;
+    Gson gson;
 
     Task task;
     Task task2;
@@ -38,7 +39,15 @@ public class HttpTaskServerTest {
     Subtask subtask2;
     Epic epic2;
 
-    public HttpTaskServerTest() {
+    @BeforeEach
+    public void setUp() {
+        manager = Managers.getDefaultInMemory();
+        taskServer = new HttpTaskServer(manager);
+        gson = GsonFactory.createGson();
+        manager.removeAllTasksFromManager();
+        manager.removeAllEpicsFromManager();
+        taskServer.start();
+
         task = new Task("Task1", "Description", TaskStatus.NEW,
                 "26.06.2024, 22:00:00", 15);
 
@@ -54,13 +63,6 @@ public class HttpTaskServerTest {
                 TaskStatus.IN_PROGRESS, "26.06.2024, 09:00:00", 15);
 
         epic2 = new Epic("Epic2", "Description");
-    }
-
-    @BeforeEach
-    public void setUp() {
-        manager.removeAllTasksFromManager();
-        manager.removeAllEpicsFromManager();
-        taskServer.start();
     }
 
     @AfterEach
