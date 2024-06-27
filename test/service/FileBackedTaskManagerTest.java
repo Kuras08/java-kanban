@@ -1,6 +1,6 @@
 package service;
 
-import exceptions.ManagerLoadException;
+import exceptions.FileOperationException;
 import model.Task;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -19,16 +19,15 @@ public class FileBackedTaskManagerTest extends TaskManagerTest<FileBackedTaskMan
     private Path file;
     private TaskManager loadedTaskManager;
 
-    @Override
     @BeforeEach
     public void beforeEach() {
         try {
             file = Files.createTempFile("testFile", "csv");
         } catch (IOException e) {
-            throw new ManagerLoadException("Error reading file!");
+            throw new FileOperationException("Error creating temporary file!");
         }
-        super.beforeEach();
-        loadedTaskManager = FileBackedTaskManager.loadFromFile(file);
+        super.setUp();
+        loadedTaskManager = createTaskManager();
     }
 
     @Override

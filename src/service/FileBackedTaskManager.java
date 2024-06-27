@@ -2,7 +2,6 @@ package service;
 
 import exceptions.ManagerLoadException;
 import exceptions.ManagerSaveException;
-import exceptions.NotFoundException;
 import model.*;
 
 import java.io.BufferedReader;
@@ -10,7 +9,6 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.time.Duration;
 import java.time.LocalDateTime;
 
@@ -23,11 +21,6 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         this.file = file;
     }
 
-    public FileBackedTaskManager(HistoryManager historyManager) {
-        super(historyManager);
-        this.file = Paths.get("resources/task_manager_data.csv");
-    }
-
     public static FileBackedTaskManager loadFromFile(Path file) {
         final FileBackedTaskManager manager = new FileBackedTaskManager(Managers.getDefaultHistory(), file);
         int maxId = 0;
@@ -37,7 +30,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
             String line;
             while ((line = reader.readLine()) != null) {
                 final Task task = manager.fromString(line);
-                final int id = task.getId();
+                final Integer id = task.getId();
                 final TaskType type = task.getType();
 
                 switch (type) {
@@ -55,7 +48,6 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                         epic.addSubtask((Subtask) task);
                         manager.calculateEpicTime(epic);
                     }
-                    default -> throw new NotFoundException("Unknown task type: " + type);
                 }
                 maxId = Math.max(maxId, id);
             }
@@ -86,7 +78,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     }
 
     @Override
-    public void removeTaskById(int id) {
+    public void removeTaskById(Integer id) {
         super.removeTaskById(id);
         save();
     }
@@ -111,7 +103,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     }
 
     @Override
-    public void removeEpicById(int id) {
+    public void removeEpicById(Integer id) {
         super.removeEpicById(id);
         save();
     }
@@ -136,7 +128,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     }
 
     @Override
-    public void removeSubtaskById(int id) {
+    public void removeSubtaskById(Integer id) {
         super.removeSubtaskById(id);
         save();
     }
@@ -163,7 +155,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
 
     private Task fromString(String value) {
         String[] parts = value.split(",");
-        int id = Integer.parseInt(parts[0]);
+        final Integer id = Integer.parseInt(parts[0]);
         final TaskType type = TaskType.valueOf(parts[1]);
         final String name = parts[2];
         final TaskStatus status = TaskStatus.valueOf(parts[3]);
@@ -178,7 +170,6 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                 final int epicId = Integer.parseInt(parts[5]);
                 yield new Subtask(id, epicId, name, description, status, startTime, duration);
             }
-            default -> throw new NotFoundException("Unknown task type: " + type);
         };
     }
 

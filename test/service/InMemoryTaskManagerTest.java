@@ -7,10 +7,9 @@ import org.junit.jupiter.api.DisplayName;
 @DisplayName("InMemoryTaskManagerTest")
 class InMemoryTaskManagerTest extends TaskManagerTest<InMemoryTaskManager> {
 
-    @Override
     @BeforeEach
     void beforeEach() {
-        super.beforeEach();
+        super.setUp();
     }
 
     @Override
