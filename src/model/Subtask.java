@@ -1,19 +1,38 @@
 package model;
 
+import com.google.gson.annotations.Expose;
+
 import java.time.Duration;
 import java.time.LocalDateTime;
 
 public class Subtask extends Task {
 
-    private final int epicId;
+    @Expose
+    private final Integer epicId;
 
-    public Subtask(int epicId, String name, String description, TaskStatus status, LocalDateTime startTime, Duration duration) {
+    public Subtask(Integer epicId,
+                   String name,
+                   String description,
+                   TaskStatus status,
+                   String startTime,
+                   int duration) {
         super(name, description, status, startTime, duration);
         this.epicId = epicId;
     }
 
-    public Subtask(int id,
-                   int epicId,
+    public Subtask(Integer id,
+                   Integer epicId,
+                   String name,
+                   String description,
+                   TaskStatus status,
+                   String startTime,
+                   int duration) {
+        super(id, name, description, status, startTime, duration);
+        this.epicId = epicId;
+    }
+
+    public Subtask(Integer id,
+                   Integer epicId,
                    String name,
                    String description,
                    TaskStatus status,
@@ -22,6 +41,7 @@ public class Subtask extends Task {
         super(id, name, description, status, startTime, duration);
         this.epicId = epicId;
     }
+
 
     @Override
     public Integer getEpicId() {

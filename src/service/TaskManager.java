@@ -16,37 +16,37 @@ public interface TaskManager {
 
     void removeAllTasksFromManager();
 
-    Task getTaskById(int id);
+    Task getTaskById(Integer id);
 
     Task createTask(Task task);
 
     void updateTask(Task task);
 
-    void removeTaskById(int id);
+    void removeTaskById(Integer id);
 
     List<Epic> getAllEpics();
 
     void removeAllEpicsFromManager();
 
-    Epic getEpicById(int id);
+    Epic getEpicById(Integer id);
 
     Epic createEpic(Epic epic);
 
     void updateEpic(Epic epic);
 
-    void removeEpicById(int id);
+    void removeEpicById(Integer id);
 
     List<Subtask> getAllSubtasks();
 
     void removeAllSubtasksFromManager();
 
-    Subtask getSubtaskById(int id);
+    Subtask getSubtaskById(Integer id);
 
     Subtask createSubtask(Subtask subtask);
 
     void updateSubtask(Subtask subtask);
 
-    void removeSubtaskById(int id);
+    void removeSubtaskById(Integer id);
 
-    List<Subtask> getAllSubtasksEpic(int id);
+    List<Subtask> getAllSubtasksEpic(Integer id);
 }
