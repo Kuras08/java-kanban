@@ -8,6 +8,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 
 public class Task {
+
     @Expose
     private Integer id;
     @Expose
@@ -27,7 +28,7 @@ public class Task {
         this.name = name;
         this.description = description;
         this.status = status;
-        this.startTime = LocalDateTime.now().withNano(0);
+        this.startTime = LocalDateTime.now();
         this.duration = Duration.ZERO;
         this.endTime = startTime.plus(duration);
     }
@@ -66,7 +67,6 @@ public class Task {
         this.endTime = startTime.plus(duration);
         this.id = id;
     }
-
 
     public Integer getId() {
         return id;
@@ -157,5 +157,4 @@ public class Task {
                 ", endTime=" + endTime +
                 '}';
     }
-
 }

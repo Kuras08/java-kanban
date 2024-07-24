@@ -21,12 +21,12 @@ public class EpicHandler extends BaseHttpHandler {
             sendText(exchange, jsonResponse, 200);
 
         } else if (isEpicPathWithId(pathParts)) {
-            int epicId = Integer.parseInt(pathParts[2]);
+            final int epicId = Integer.parseInt(pathParts[2]);
             String jsonResponse = gson.toJson(manager.getEpicById(epicId));
             sendText(exchange, jsonResponse, 200);
 
         } else if (isEpicPathWithIdAndSubtasks(pathParts)) {
-            int epicId = Integer.parseInt(pathParts[2]);
+            final int epicId = Integer.parseInt(pathParts[2]);
             String jsonResponse = gson.toJson(manager.getAllSubtasksEpic(epicId));
             sendText(exchange, jsonResponse, 200);
         } else {
@@ -36,7 +36,7 @@ public class EpicHandler extends BaseHttpHandler {
 
     @Override
     protected void handlePost(HttpExchange exchange, String[] pathParts) throws IOException {
-        Epic requestEpic = getRequestEpic(exchange);
+        final Epic requestEpic = getRequestEpic(exchange);
         if (isEpicPath(pathParts)) {
             manager.createEpic(requestEpic);
             String jsonResponse = gson.toJson(requestEpic);
@@ -53,7 +53,7 @@ public class EpicHandler extends BaseHttpHandler {
             sendText(exchange, "", 204);
 
         } else if (isEpicPathWithId(pathParts)) {
-            int epicId = Integer.parseInt(pathParts[2]);
+            final int epicId = Integer.parseInt(pathParts[2]);
             manager.removeEpicById(epicId);
             sendText(exchange, "", 204);
         } else {

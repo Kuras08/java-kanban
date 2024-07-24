@@ -16,10 +16,15 @@ import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
 public abstract class BaseHttpHandler implements HttpHandler {
-    protected static final Charset DEFAULT_CHARSET = StandardCharsets.UTF_8;
 
+    protected static final Charset DEFAULT_CHARSET = StandardCharsets.UTF_8;
     protected final TaskManager manager;
     protected final Gson gson;
+
+    public BaseHttpHandler(TaskManager manager, Gson gson) {
+        this.manager = manager;
+        this.gson = gson;
+    }
 
     protected abstract void handleGet(HttpExchange exchange, String[] pathParts) throws IOException;
 
@@ -27,17 +32,12 @@ public abstract class BaseHttpHandler implements HttpHandler {
 
     protected abstract void handleDelete(HttpExchange exchange, String[] pathParts) throws IOException;
 
-    public BaseHttpHandler(TaskManager manager, Gson gson) {
-        this.manager = manager;
-        this.gson = gson;
-    }
-
     @Override
     public void handle(HttpExchange exchange) throws IOException {
         try (exchange) {
             try {
-                MethodType method = getMethod(exchange);
-                String[] pathParts = getPathParts(exchange);
+                final MethodType method = getMethod(exchange);
+                final String[] pathParts = getPathParts(exchange);
 
                 switch (method) {
                     case GET -> handleGet(exchange, pathParts);
@@ -45,18 +45,8 @@ public abstract class BaseHttpHandler implements HttpHandler {
                     case DELETE -> handleDelete(exchange, pathParts);
                     default -> sendText(exchange, "Method Not Allowed", 405);
                 }
-            } catch (JsonSyntaxException e) {
-                sendText(exchange, "Invalid JSON Syntax: " + e.getMessage(), 400);
-            } catch (NumberFormatException e) {
-                sendText(exchange, "Invalid Number Format: " + e.getMessage(), 400);
-            } catch (NotFoundException e) {
-                sendText(exchange, "Not Found: " + e.getMessage(), 404);
-            } catch (ValidationException e) {
-                sendText(exchange, "Not Acceptable: " + e.getMessage(), 406);
-            } catch (ManagerSaveException e) {
-                sendText(exchange, "Error Saving Data: " + e.getMessage(), 500);
             } catch (Exception e) {
-                sendText(exchange, "Internal Server Error: " + e.getMessage(), 500);
+                handleException(exchange, e);
             }
         }
     }
@@ -69,9 +59,8 @@ public abstract class BaseHttpHandler implements HttpHandler {
         } else {
             byte[] response = text.getBytes(DEFAULT_CHARSET);
             exchange.sendResponseHeaders(statusCode, response.length);
-            try (OutputStream os = exchange.getResponseBody()) {
-                os.write(response);
-            }
+            OutputStream os = exchange.getResponseBody();
+            os.write(response);
         }
     }
 
@@ -80,7 +69,27 @@ public abstract class BaseHttpHandler implements HttpHandler {
     }
 
     private String[] getPathParts(HttpExchange exchange) {
-        String path = exchange.getRequestURI().getPath();
-        return path.split("/");
+        return exchange.getRequestURI().getPath().split("/");
+    }
+
+    private void handleException(HttpExchange exchange, Exception e) throws IOException {
+        switch (e) {
+            case JsonSyntaxException exception ->
+                    sendText(exchange, "Invalid JSON Syntax: " + exception.getMessage(), 400);
+
+            case NumberFormatException exception ->
+                    sendText(exchange, "Invalid Number Format: " + exception.getMessage(), 400);
+
+            case NotFoundException exception -> sendText(exchange, "Not Found: " + exception.getMessage(),
+                    404);
+
+            case ValidationException exception -> sendText(exchange, "Not Acceptable: " + exception.getMessage(),
+                    406);
+
+            case ManagerSaveException exception ->
+                    sendText(exchange, "Error Saving Data: " + exception.getMessage(), 500);
+
+            default -> sendText(exchange, "Internal Server Error: " + e.getMessage(), 500);
+        }
     }
 }

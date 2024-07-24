@@ -17,12 +17,16 @@ public class Epic extends Task {
     }
 
     public Epic(Integer id, String name, String description) {
-        super(id, name, description, TaskStatus.NEW, LocalDateTime.now().withNano(0), Duration.ZERO);
+        super(id, name, description, TaskStatus.NEW, LocalDateTime.now(), Duration.ZERO);
     }
 
-    public Epic(Integer id, String name, String description, TaskStatus status, LocalDateTime startTime, Duration duration) {
+    public Epic(Integer id,
+                String name,
+                String description,
+                TaskStatus status,
+                LocalDateTime startTime,
+                Duration duration) {
         super(id, name, description, status, startTime, duration);
-
     }
 
     public void addSubtask(Subtask subtask) {
@@ -36,7 +40,6 @@ public class Epic extends Task {
     public void removeAllSubtasks() {
         subtasks.clear();
     }
-
 
     public List<Subtask> getSubtasks() {
         return subtasks;

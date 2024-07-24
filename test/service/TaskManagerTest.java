@@ -48,7 +48,6 @@ abstract class TaskManagerTest<T extends TaskManager> {
         epic2 = manager.createEpic(new Epic("Epic2", "Description"));
     }
 
-
     @Test
     @DisplayName("Должен проверять, что возвращаемый список содержит задачи")
     void shouldCheckReturnedListTasks() {
@@ -172,8 +171,7 @@ abstract class TaskManagerTest<T extends TaskManager> {
     @DisplayName("Должен проверять обновление всех полей подзадачи")
     void shouldCheckUpdateAllFieldSubtask() {
         Subtask updatedSubtask = new Subtask(subtask.getId(), epic.getId(), "newSubtask",
-                "newDescription", TaskStatus.IN_PROGRESS,
-                "26.06.2024, 12:00:00", 10);
+                "newDescription", TaskStatus.IN_PROGRESS, "26.06.2024, 12:00:00", 10);
 
         manager.updateSubtask(updatedSubtask);
         Task savedSubtask = manager.getSubtaskById(subtask.getId());
@@ -189,7 +187,6 @@ abstract class TaskManagerTest<T extends TaskManager> {
         assertEquals(subtask.getDuration(), epic.getDuration());
         assertEquals(subtask.getEndTime(), epic.getEndTime());
     }
-
 
     @Test
     @DisplayName("Должен проверять удаление задачи по id из списка")

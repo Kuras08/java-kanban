@@ -22,7 +22,7 @@ public class TaskHandler extends BaseHttpHandler {
             sendText(exchange, jsonResponse, 200);
 
         } else if (isTaskPathWithId(pathParts)) {
-            int taskId = Integer.parseInt(pathParts[2]);
+            final int taskId = Integer.parseInt(pathParts[2]);
             String jsonResponse = gson.toJson(manager.getTaskById(taskId));
             sendText(exchange, jsonResponse, 200);
         } else {
@@ -32,14 +32,14 @@ public class TaskHandler extends BaseHttpHandler {
 
     @Override
     protected void handlePost(HttpExchange exchange, String[] pathParts) throws IOException {
-        Task requestTask = getRequestTask(exchange);
+        final Task requestTask = getRequestTask(exchange);
         if (isTaskPath(pathParts)) {
             manager.createTask(requestTask);
             String jsonResponse = gson.toJson(requestTask);
             sendText(exchange, jsonResponse, 201);
 
         } else if (isTaskPathWithId(pathParts)) {
-            int taskId = Integer.parseInt(pathParts[2]);
+            final int taskId = Integer.parseInt(pathParts[2]);
             requestTask.setId(taskId);
             manager.updateTask(requestTask);
             String jsonResponse = gson.toJson(requestTask);
@@ -56,7 +56,7 @@ public class TaskHandler extends BaseHttpHandler {
             sendText(exchange, "", 204);
 
         } else if (isTaskPathWithId(pathParts)) {
-            int taskId = Integer.parseInt(pathParts[2]);
+            final int taskId = Integer.parseInt(pathParts[2]);
             manager.removeTaskById(taskId);
             sendText(exchange, "", 204);
         } else {

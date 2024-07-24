@@ -21,7 +21,7 @@ public class SubtaskHandler extends BaseHttpHandler {
             sendText(exchange, jsonResponse, 200);
 
         } else if (isSubtaskPathWithId(pathParts)) {
-            int subtaskId = Integer.parseInt(pathParts[2]);
+            final int subtaskId = Integer.parseInt(pathParts[2]);
             String jsonResponse = gson.toJson(manager.getSubtaskById(subtaskId));
             sendText(exchange, jsonResponse, 200);
         } else {
@@ -31,14 +31,14 @@ public class SubtaskHandler extends BaseHttpHandler {
 
     @Override
     protected void handlePost(HttpExchange exchange, String[] pathParts) throws IOException {
-        Subtask requestSubtask = getRequestSubtask(exchange);
+        final Subtask requestSubtask = getRequestSubtask(exchange);
         if (isSubtaskPath(pathParts)) {
             manager.createSubtask(requestSubtask);
             String jsonResponse = gson.toJson(requestSubtask);
             sendText(exchange, jsonResponse, 201);
 
         } else if (isSubtaskPathWithId(pathParts)) {
-            int subtaskId = Integer.parseInt(pathParts[2]);
+            final int subtaskId = Integer.parseInt(pathParts[2]);
             requestSubtask.setId(subtaskId);
             manager.updateSubtask(requestSubtask);
             String jsonResponse = gson.toJson(requestSubtask);
@@ -55,7 +55,7 @@ public class SubtaskHandler extends BaseHttpHandler {
             sendText(exchange, "", 204);
 
         } else if (isSubtaskPathWithId(pathParts)) {
-            int subtaskId = Integer.parseInt(pathParts[2]);
+            final int subtaskId = Integer.parseInt(pathParts[2]);
             manager.removeSubtaskById(subtaskId);
             sendText(exchange, "", 204);
         } else {
